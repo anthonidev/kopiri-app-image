@@ -1,0 +1,10 @@
+cairocffi==1.6.1
+cffi==1.16.0
+cssselect2==0.7.0
+customtkinter==5.2.0
+darkdetect==0.8.0
+defusedxml==0.7.1
+Pillow==10.0.1
+pycparser==2.21
+tinycss2==1.2.1
+webencodings==0.5.1
