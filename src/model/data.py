@@ -1,15 +1,18 @@
 import json
 import os
 
+file_path = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(file_path, "..", "..", "config.json")
+
 
 def read_json():
-    with open('config.json') as json_file:
+    with open(file_path) as json_file:
         data = json.load(json_file)
         return data
 
 
 def write_json(data):
-    with open('config.json', 'w') as outfile:
+    with open(file_path, 'w') as outfile:
         json.dump(data, outfile, indent=4)
 
 
@@ -17,7 +20,8 @@ def default_config():
     data = {
         "quality": "60",
         "weight_max": "700",
-        "output_dir": os.path.join(os.path.expanduser("~"), "Desktop", "kopiriApp", "app", "out"),
+        # default output dir is download folder
+        "output_dir": os.path.join(os.path.expanduser("~"), "Downloads"),
         "weight": "350",
         "theme": "System",
         "manipulation": True

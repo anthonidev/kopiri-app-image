@@ -24,8 +24,13 @@ def open_files_action(self):
             text="Archivos soportados (" + str(supported_files_counter) + ")")
 
         self.files = supported_files_list
-        self.compress_button.grid(
-            row=5, column=0, padx=20, pady=10, sticky="ew")
+
+        self.button_clear_files.grid(
+            row=0, column=0, padx=20, pady=10, sticky="ew")
+        self.button_compress.grid(
+            row=0, column=1, padx=20, pady=10, sticky="ew")
+
+        self.button_upload_files.grid_forget()
 
         tkinter.messagebox.showinfo(
             "Archivos", "Se han seleccionado " + str(supported_files_counter) + " archivos soportados")

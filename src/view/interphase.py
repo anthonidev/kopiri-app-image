@@ -1,13 +1,13 @@
-from src.model.data import Config
-from .functions.select_frame import select_frame_by_name
-from .functions.open_files import open_files_action
 import tkinter
 import tkinter.messagebox
 import customtkinter
 import os
-from PIL import Image
 from .thread import ThreadCompresProcess
-# customtkinter.set_default_color_theme("dark-blue")
+from src.model.data import Config
+from .functions.select_frame import select_frame_by_name
+from .functions.open_files import open_files_action
+from utils.image_file import OpenFile
+from tkinter import filedialog
 
 
 class App(customtkinter.CTk):
@@ -23,20 +23,50 @@ class App(customtkinter.CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        image_path = os.path.join(os.path.dirname(
-            os.path.realpath(__file__)), "assets")
-        self.logo_image = customtkinter.CTkImage(Image.open(os.path.join(
-            image_path, "CustomTkinter_logo_single.png")), size=(26, 26))
-        self.large_test_image = customtkinter.CTkImage(Image.open(
-            os.path.join(image_path, "title_image.png")), size=(500, 150))
-        self.image_icon_image = customtkinter.CTkImage(Image.open(
-            os.path.join(image_path, "image_icon_light.png")), size=(20, 20))
-        self.home_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "home_dark.png")),
-                                                 dark_image=Image.open(os.path.join(image_path, "home_light.png")), size=(20, 20))
-        self.chat_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "chat_dark.png")),
-                                                 dark_image=Image.open(os.path.join(image_path, "chat_light.png")), size=(20, 20))
-        self.add_user_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "add_user_dark.png")),
-                                                     dark_image=Image.open(os.path.join(image_path, "add_user_light.png")), size=(20, 20))
+        of = OpenFile(
+            os.path.join(
+                os.path.dirname(os.path.realpath(__file__)),
+                "assets"
+            )
+        )
+
+        self.logo_image = customtkinter.CTkImage(of.open_image(
+            'CustomTkinter_logo_single.png'), size=(26, 26))
+        self.large_test_image = customtkinter.CTkImage(
+            of.open_image("title_image.png"), size=(500, 150))
+        self.image_icon_image = customtkinter.CTkImage(
+            of.open_image("image_icon_light.png"),
+            size=(20, 20)
+        )
+        # icons
+        self.web_icon = customtkinter.CTkImage(
+            light_image=of.open_image("web_dark.png"),
+            dark_image=of.open_image("web_light.png"),
+            size=(20, 20)
+        )
+        self.config_icon = customtkinter.CTkImage(
+            light_image=of.open_image("config_dark.png"),
+            dark_image=of.open_image("config_light.png"),
+            size=(20, 20)
+        )
+        self.upload_icon = customtkinter.CTkImage(
+            of.open_image("upload_light.png"),
+            size=(20, 20)
+        )
+
+        self.compress_icon = customtkinter.CTkImage(
+            of.open_image("compress_light.png"),
+            size=(15, 15)
+        )
+        self.clear_icon = customtkinter.CTkImage(
+            of.open_image("clear_light.png"),
+            size=(15, 15)
+        )
+
+        self.file_icon = customtkinter.CTkImage(
+            of.open_image("file_light.png"),
+            size=(15, 15)
+        )
 
         self.navigation_frame = customtkinter.CTkFrame(self, corner_radius=0)
         self.navigation_frame.grid(row=0, column=0, sticky="nsew")
@@ -48,12 +78,12 @@ class App(customtkinter.CTk):
 
         self.home_button = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="WEB",
                                                    fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                   image=self.home_image, anchor="w", command=self.home_button_event)
+                                                   image=self.web_icon, anchor="w", command=self.home_button_event)
         self.home_button.grid(row=1, column=0, sticky="ew")
 
         self.frame_2_button = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="CONFIGURACIÓN",
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=self.chat_image, anchor="w", command=self.frame_2_button_event)
+                                                      image=self.config_icon, anchor="w", command=self.frame_2_button_event)
         self.frame_2_button.grid(row=2, column=0, sticky="ew")
 
         self.appearance_mode_menu = customtkinter.CTkOptionMenu(self.navigation_frame, values=["Dark", "Light", "System"],
@@ -71,82 +101,200 @@ class App(customtkinter.CTk):
         self.home_frame_large_image_label.grid(
             row=0, column=0, padx=20, pady=10)
 
-        # input file
+        # button file
 
-        self.input_select_files = customtkinter.CTkButton(
+        self.button_upload_files = customtkinter.CTkButton(
             self.home_frame,
             text="Seleccionar imagenes",
-            image=self.image_icon_image, compound="right",
+            image=self.upload_icon, compound="right",
             command=self.open_files,
-            font=customtkinter.CTkFont(size=20, weight="bold")
+            font=customtkinter.CTkFont(size=18, weight="bold"),
+            hover_color="gray30",
+            height=50,
+            anchor="center",
         )
-
-        # todo el ancho de la columna
-        self.input_select_files.grid(
+        self.button_upload_files.grid(
             row=1, column=0, padx=20, pady=10, sticky="ew")
 
         # create textbox
         self.text_frame = customtkinter.CTkFrame(
-            self.home_frame, corner_radius=0, fg_color=("gray90", "gray10"), border_width=1, border_color="gray50")
+            self.home_frame,
+            corner_radius=0,
+            fg_color=("gray90", "gray10"),
+            border_width=1,
+            border_color="gray50"
+        )
         self.text_frame.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
-
+        self.text_frame.grid_columnconfigure(1, weight=1)
         self.label_upload = customtkinter.CTkLabel(
-            self.text_frame, text="Archivos subidos (0)")
-        self.label_upload.grid(row=0, column=0, padx=20, pady=5)
+            self.text_frame,
+            font=customtkinter.CTkFont(size=15, weight="normal")
+        )
+        self.label_upload.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=5,
+            sticky="e"
+        )
 
         self.label_supported = customtkinter.CTkLabel(
-            self.text_frame, text="Archivos soportados (0)")
-        self.label_supported.grid(row=1, column=0, padx=20, pady=5)
+            self.text_frame,
+            font=customtkinter.CTkFont(size=15, weight="normal")
+        )
+        self.label_supported.grid(
+            row=0,
+            column=1,
+            padx=20,
+            pady=5,
+            sticky="w"
+        )
 
         self.textbox = customtkinter.CTkTextbox(self.text_frame, width=500)
-        self.textbox.grid(row=2, column=0, padx=20, pady=10, sticky="nsew")
+        self.textbox.grid(row=1, column=0, padx=20, pady=10,
+                          sticky="nsew", columnspan=2)
 
         # quality
         self.quality_frame = customtkinter.CTkFrame(
             self.home_frame, corner_radius=0, fg_color=("gray90", "gray10"), border_width=1, border_color="gray50")
-        self.quality_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
+
+        self.quality_frame.grid_columnconfigure(1, weight=1)
 
         self.label_quality = customtkinter.CTkLabel(
-            self.quality_frame, text="Calidad (1-100)")
-        self.label_quality.grid(row=0, column=0, padx=20, pady=5)
+            self.quality_frame,
+            text="Calidad",
+            font=customtkinter.CTkFont(size=15, weight="normal")
+        )
+        self.label_quality.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=5,
+            sticky="w",
+            columnspan=2
+        )
 
         self.sd_quality = customtkinter.CTkSlider(
-            self.quality_frame, from_=1, to=100, number_of_steps=100, width=450)
-        self.sd_quality.grid(row=1, column=0, padx=20, pady=5, sticky="ew")
-        self.lb_quality = customtkinter.CTkLabel(
-            self.quality_frame)
-        self.lb_quality.grid(row=1, column=2, padx=20, pady=5)
-        # optimize
-
-        self.optimize_frame = customtkinter.CTkFrame(
-            self.home_frame, corner_radius=0, fg_color=("gray90", "gray10"), border_width=1, border_color="gray50")
-        self.optimize_frame.grid(
-            row=4, column=0, padx=20, pady=10, sticky="ew")
-
-        self.label_optimize = customtkinter.CTkLabel(
-            self.optimize_frame, text="Peso KB")
-        self.label_optimize.grid(row=0, column=0, padx=20, pady=5)
-
-        self.sd_optimize = customtkinter.CTkSlider(
-            self.optimize_frame, from_=1, to=700, number_of_steps=14, width=450)
-        self.sd_optimize.grid(row=1, column=0, padx=20, pady=5, sticky="ew")
-        self.lb_optimize = customtkinter.CTkLabel(
-            self.optimize_frame)
-        self.lb_optimize.grid(row=1, column=2, padx=20, pady=5, sticky="ew")
-
-        # button compress
-        self.compress_button = customtkinter.CTkButton(
-            self.home_frame, text="Comprimir", image=self.image_icon_image, compound="right", command=self.compress,
-            font=customtkinter.CTkFont(size=20, weight="bold")
+            self.quality_frame,
+            from_=1,
+            to=100,
+            number_of_steps=100,
+            command=self.update_quality,
+            width=450
 
         )
-        self.compress_button.grid(
+        self.sd_quality.grid(
+            row=1,
+            column=0,
+            padx=20,
+            pady=5,
+            sticky="w",
+
+        )
+        self.lb_quality = customtkinter.CTkLabel(
+            self.quality_frame)
+        self.lb_quality.grid(
+            row=1,
+            column=2,
+            padx=20,
+            pady=5,
+            sticky="ew"
+        )
+
+        # optimize weight_frame label_weight sd_weight lb_weight
+
+        self.weight_frame = customtkinter.CTkFrame(
+            self.home_frame, corner_radius=0, fg_color=("gray90", "gray10"), border_width=1, border_color="gray50")
+
+        self.weight_frame.grid_columnconfigure(1, weight=1)
+
+        self.label_weight = customtkinter.CTkLabel(
+            self.weight_frame,
+            text="Peso KB",
+            font=customtkinter.CTkFont(size=15, weight="normal")
+        )
+        self.label_weight.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=5,
+            sticky="w",
+            columnspan=2
+        )
+
+        self.sd_weight = customtkinter.CTkSlider(
+            self.weight_frame, from_=1,   width=450, command=self.update_optimize)
+        self.sd_weight.grid(row=1, column=0, padx=20, pady=5, sticky="w")
+        self.lb_weight = customtkinter.CTkLabel(
+            self.weight_frame)
+        self.lb_weight.grid(row=1, column=2, padx=20, pady=5, sticky="ew")
+
+        # button compress
+
+        self.action_frame = customtkinter.CTkFrame(
+            self.home_frame, corner_radius=0, fg_color="transparent")
+        self.action_frame.grid(
             row=5, column=0, padx=20, pady=10, sticky="ew")
 
+        self.action_frame.grid_columnconfigure(1, weight=1)
+        self.button_clear_files = customtkinter.CTkButton(
+            self.action_frame,
+            text="Limpiar",
+            command=self.clear_files,
+            image=self.clear_icon,
+            compound="right",
+            font=customtkinter.CTkFont(size=15, weight="bold"),
+            hover_color="gray30",
+            height=30,
+            anchor="center",
+
+        )
+        self.button_compress = customtkinter.CTkButton(
+            self.action_frame,
+            text="Comprimir",
+            image=self.compress_icon,
+            compound="right",
+            command=self.compress,
+            font=customtkinter.CTkFont(size=15, weight="bold"),
+            hover_color="gray30",
+            height=30,
+            anchor="center",
+
+        )
+
+        self.button_dir = customtkinter.CTkButton(
+            self.action_frame,
+            text="Abrir carpeta",
+            image=self.file_icon,
+            compound="right",
+            command=self.open_dir,
+            font=customtkinter.CTkFont(size=15, weight="bold"),
+            hover_color="gray30",
+            height=30,
+            anchor="center",
+        )
+
+        # loading frame
+        self.frame_loading = customtkinter.CTkFrame(
+            self.home_frame, corner_radius=0, fg_color=("gray90", "gray10"), border_width=1, border_color="gray50")
+
+        self.frame_loading.grid_columnconfigure(1, weight=1)
+
         self.progress_bar = customtkinter.CTkProgressBar(
-            self.home_frame)
+            self.frame_loading,
+            width=400,
+            mode="determinate",
+        )
+        self.label_progress_bar = customtkinter.CTkLabel(
+            self.frame_loading,
+            text="100%",
+            font=customtkinter.CTkFont(size=15, weight="normal")
+        )
+        self.label_progress_bar.grid(
+            row=0, column=1, padx=20, pady=10, sticky="ew")
+
         self.progress_bar.grid(
-            row=6, column=0, padx=20, pady=10, sticky="ew")
+            row=0, column=0, padx=20, pady=10, sticky="ew")
 
         # create second frame
         self.second_frame = customtkinter.CTkFrame(
@@ -167,6 +315,11 @@ class App(customtkinter.CTk):
             self.output_frame, width=500)
         self.output_frame_textbox.grid(
             row=1, column=0, padx=20, pady=10, sticky="nsew")
+
+        self.output_frame_button = customtkinter.CTkButton(
+            self.output_frame, text="Seleccionar carpeta", command=self.select_dir)
+        self.output_frame_button.grid(
+            row=2, column=0, padx=20, pady=10, sticky="ew")
 
         # quality default
         self.quality_config_frame = customtkinter.CTkFrame(
@@ -237,17 +390,22 @@ class App(customtkinter.CTk):
         self.select_frame_by_name("home")
         self.read_config()
         self.apply_config()
+        self.clear_files()
 
-        # hidden frame
-        self.sd_quality.configure(command=self.update_quality)
-
-        self.sd_optimize.configure(command=self.update_optimize)
-
+    def clear_files(self):
+        self.button_upload_files.grid(
+            row=1, column=0, padx=20, pady=10, sticky="ew")
         self.text_frame.grid_forget()
         self.quality_frame.grid_forget()
-        self.optimize_frame.grid_forget()
+        self.action_frame.grid_forget()
+        self.frame_loading.grid_forget()
+        self.weight_frame.grid_forget()
         self.progress_bar.grid_forget()
-        self.compress_button.grid_forget()
+        self.label_progress_bar.grid_forget()
+        self.button_compress.grid_forget()
+        self.button_clear_files.grid_forget()
+        self.button_dir.grid_forget()
+        self.files = []
 
     def clear_config(self):
         self.output_frame_textbox.delete(0, tkinter.END)
@@ -258,8 +416,9 @@ class App(customtkinter.CTk):
     def read_config(self):
         config = Config()
         if config.get_manipulation() == False:
+            # default output dir is download folder
             config.set_output_dir(os.path.join(
-                os.path.expanduser("~"), "Desktop", "kopiriApp", "app", "out"))
+                os.path.expanduser("~"), "Downloads"))
             config.set_manipulation(True)
         self.output_frame_textbox.insert(
             0, config.get_output_dir())
@@ -279,12 +438,12 @@ class App(customtkinter.CTk):
         self.lb_quality.configure(text=str(
             self.quality_config_frame_textbox.get()))
 
-        self.sd_optimize.configure(
+        self.sd_weight.configure(
             from_=100, to=int(self.weight_max_config_frame_textbox.get()), number_of_steps=int(self.weight_max_config_frame_textbox.get()) / 10
         )
 
-        self.sd_optimize.set(int(self.weight_config_frame_textbox.get()))
-        self.lb_optimize.configure(text=str(
+        self.sd_weight.set(int(self.weight_config_frame_textbox.get()))
+        self.lb_weight.configure(text=str(
             self.weight_config_frame_textbox.get()))
 
     def open_files(self):
@@ -293,8 +452,10 @@ class App(customtkinter.CTk):
     def show_frames(self):
         self.text_frame.grid(row=2, column=0, padx=20, pady=10, sticky="ew")
         self.quality_frame.grid(row=3, column=0, padx=20, pady=10, sticky="ew")
-        self.optimize_frame.grid(
+        self.weight_frame.grid(
             row=4, column=0, padx=20, pady=10, sticky="ew")
+        self.action_frame.grid(
+            row=5, column=0, padx=20, pady=10, sticky="ew")
 
     def update_quality(self, event):
         value = self.sd_quality.get()
@@ -303,9 +464,9 @@ class App(customtkinter.CTk):
             text=str(value))
 
     def update_optimize(self, event):
-        value = self.sd_optimize.get()
+        value = self.sd_weight.get()
         value = int(value)
-        self.lb_optimize.configure(
+        self.lb_weight.configure(
             text=str(value))
 
     def select_frame_by_name(self, name):
@@ -323,8 +484,27 @@ class App(customtkinter.CTk):
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def compress(self):
+        self.quality_frame.grid_forget()
+        self.action_frame.grid_forget()
+        self.weight_frame.grid_forget()
+        self.button_compress.grid_forget()
+
+        self.frame_loading.grid(
+            row=6, column=0, padx=20, pady=10, sticky="ew")
         thread = ThreadCompresProcess(
-            files=self.files, quality=int(self.sd_quality.get()), weight_max=int(self.sd_optimize.get()), progress_bar=self.progress_bar)
+            files=self.files,
+            quality=int(self.sd_quality.get()),
+            weight_max=int(self.sd_weight.get()),
+            progress_bar=self.progress_bar,
+            label_progress_bar=self.label_progress_bar,
+            output_dir=self.output_frame_textbox.get(),
+            textbox=self.textbox,
+            frame=self.frame_loading,
+            button_compress=self.button_compress,
+            button_dir=self.button_dir,
+            action_frame=self.action_frame
+
+        )
         thread.start()
 
     def save_config(self):
@@ -347,6 +527,18 @@ class App(customtkinter.CTk):
         self.apply_config()
         tkinter.messagebox.showinfo(
             "Información", "Configuración restablecida correctamente")
+
+    def open_dir(self):
+        output_dir = self.output_frame_textbox.get()
+        os.startfile(output_dir)
+
+    def select_dir(self):
+        output_dir = filedialog.askdirectory()
+        if output_dir != "":
+            self.output_frame_textbox.delete(0, tkinter.END)
+            self.output_frame_textbox.insert(0, output_dir + "/")
+        else:
+            pass
 
 
 def init():
