@@ -16,6 +16,13 @@ class App(customtkinter.CTk):
 
         self.title("KOPIRI")
         self.geometry("770x800")
+
+        self.iconbitmap(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            "assets",
+            "kopiri_logo.ico"
+        ))
+
         self.resizable(False, False)
 
         self.files = []
@@ -31,7 +38,10 @@ class App(customtkinter.CTk):
         )
 
         self.logo_image = customtkinter.CTkImage(of.open_image(
-            'CustomTkinter_logo_single.png'), size=(26, 26))
+            'kopiri_logo.png'), size=(26, 26))
+
+        # icono de la ventana
+
         self.large_test_image = customtkinter.CTkImage(
             of.open_image("title_image.png"), size=(500, 150))
         self.image_icon_image = customtkinter.CTkImage(
