@@ -2,7 +2,7 @@ import json
 import os
 
 file_path = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(file_path, "..", "..", "config.json")
+file_path = os.path.join(file_path, "config.json")
 
 
 def read_json():
@@ -20,7 +20,6 @@ def default_config():
     data = {
         "quality": "60",
         "weight_max": "700",
-        # default output dir is download folder
         "output_dir": os.path.join(os.path.expanduser("~"), "Downloads"),
         "weight": "350",
         "theme": "System",
