@@ -1,7 +1,6 @@
 # Kopiri: Compresor de Imágenes
 
-![Logo de Kopiri](ruta/a/tu/logo.png) <!-- Reemplaza con la ruta a tu logo si tienes uno -->
-
+![ui](example/banner-1.png)
 Kopiri es un compresor de imágenes gratuito y de código abierto diseñado para Windows. Permite comprimir múltiples imágenes simultáneamente sin comprometer la calidad, y está optimizado para exportar en formato .webp, ideal para la web.
 
 ## Características Principales
