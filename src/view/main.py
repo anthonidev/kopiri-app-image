@@ -21,6 +21,7 @@ class App(customtkinter.CTk):
             "kopiri_logo.ico"
         ))
         self.resizable(False, False)
+
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 

@@ -41,7 +41,7 @@ class Navigation:
             hover_color=("gray70", "gray30"),
             image=self.master.web_icon,
             anchor="w",
-            command=self.web_button_event
+            command=self.web_button_event,
         )
         self.web_button.grid(row=1, column=0, sticky="ew")
         self.config_button = customtkinter.CTkButton(

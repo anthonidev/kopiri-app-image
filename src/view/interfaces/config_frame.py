@@ -20,13 +20,22 @@ class ConfigFrame():
         pass
 
     def output_frame_ui(self):
+        self.banner = customtkinter.CTkLabel(
+            self.config_frame, text="", image=self.master.banner_image_config)
+
+        self.banner.grid(
+            row=0, column=0,
+            padx=20, pady=10,
+            sticky="ew"
+        )
+
         self.output_frame = customtkinter.CTkFrame(
             self.config_frame,
             corner_radius=0,
             fg_color=("gray90", "gray10")
         )
         self.output_frame.grid(
-            row=0, column=0,
+            row=1, column=0,
             padx=20, pady=10,
             sticky="ew"
         )
@@ -74,7 +83,7 @@ class ConfigFrame():
             fg_color=("gray90", "gray10")
         )
         self.quality_config_frame.grid(
-            row=1, column=0,
+            row=2, column=0,
             padx=20, pady=10,
             sticky="ew"
         )
@@ -109,7 +118,7 @@ class ConfigFrame():
             fg_color=("gray90", "gray10")
         )
         self.weight_config_frame.grid(
-            row=2, column=0,
+            row=3, column=0,
             padx=20, pady=10,
             sticky="ew"
         )
@@ -164,7 +173,7 @@ class ConfigFrame():
         )
 
         self.save_config_frame.grid(
-            row=3, column=0,
+            row=4, column=0,
             padx=20, pady=10,
             sticky="ew"
         )
