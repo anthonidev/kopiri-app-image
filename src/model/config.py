@@ -1,11 +1,18 @@
 import json
 import os
 
-file_path = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(file_path, "config.json")
+config_dir = os.path.join(os.path.expanduser("~"),
+                          "AppData", "Local", "kopiri")
+if not os.path.exists(config_dir):
+    os.makedirs(config_dir)
+
+file_path = os.path.join(config_dir, "config.json")
 
 
 def read_json():
+    if not os.path.exists(file_path):
+        default_config()
+
     with open(file_path) as json_file:
         data = json.load(json_file)
         return data
@@ -17,6 +24,7 @@ def write_json(data):
 
 
 def default_config():
+
     data = {
         "quality": "60",
         "weight_max": "700",
@@ -25,6 +33,7 @@ def default_config():
         "theme": "System",
         "manipulation": True
     }
+
     write_json(data)
 
 
